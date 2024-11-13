@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service'; // Импорт сервиса пользователей, если он есть
+import { UsersService } from '../users/users.service'; 
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findUserByUsername(username);
     if (user && user.password === pass) {
       // Необходимо заменить сравнение паролей на хэширование для реальной безопасности
       const { password, ...result } = user;
@@ -32,8 +33,7 @@ export class AuthService {
     };
   }
 
-  async register(registerDto: LoginDto) {
-    // Регистрация нового пользователя (логика сохранения пользователя в базе)
-    return this.usersService.create(registerDto);
-  }
+  async register(registerDto: RegisterDto) {
+    return this.usersService.createUser(registerDto.username, registerDto.password);
+  }  
 }

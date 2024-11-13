@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-  // Заглушка для поиска пользователя
-  findOne(username: string) {
-    return { id: 1, username, password: 'hashedPassword' };
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async findUserByUsername(username: string): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { username } });
   }
 
-  // Заглушка для создания пользователя
-  create(user: any) {
-    return { ...user, id: Date.now() };
+  async createUser(username: string, password: string): Promise<User> {
+    const user = this.userRepository.create({ username, password });
+    return this.userRepository.save(user);
   }
 }

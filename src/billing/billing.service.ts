@@ -1,6 +1,6 @@
 // billing.service.ts
 import { Injectable } from '@nestjs/common';
-import { User } from '../users/entities/user.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class BillingService {
